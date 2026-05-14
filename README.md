@@ -14,7 +14,8 @@ A chatbot that builds a **Theory of Mind** (ToM) knowledge graph from conversati
 ## Requirements
 
 - Python 3.14+
-- [Ollama](https://ollama.com/) running locally with at least one model pulled
+- [uv](https://docs.astral.sh/uv/) as a package manager
+- [Ollama](https://ollama.com/download/) running locally with at least one model pulled
 
 ## Usage
 
