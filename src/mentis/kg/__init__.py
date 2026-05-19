@@ -6,7 +6,10 @@ from mentis.kg.rdf import TomGraphRDF
 
 
 def get_kg(
-    kg_type: str = "graphml", file_path: str | None = None, username: str | None = None
+    kg_type: str = "graphml",
+    file_path: str | None = None,
+    username: str | None = None,
+    use_sparql: bool = False,
 ) -> TomGraph:
     """Factory function to get the appropriate KG implementation.
 
@@ -14,11 +17,14 @@ def get_kg(
         kg_type: Either "graphml" or "rdf"
         file_path: Optional explicit file path
         username: Optional username for default path construction
+        use_sparql: Optional whether to use SPARQL (only if `kg_type` is "rdf")
 
     Returns:
         TomGraph instance (either GraphML or RDF based)
     """
     if kg_type == "rdf":
-        return TomGraphRDF(file_path=file_path, username=username)
+        return TomGraphRDF(
+            file_path=file_path, username=username, use_sparql=use_sparql
+        )
     else:
         return TomGraphGraphML(file_path=file_path, username=username)

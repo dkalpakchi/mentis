@@ -46,15 +46,17 @@ def set_config(key: str, value: Any) -> None:
     save_config(config)
 
 
-def get_model() -> Optional[str]:
+def get_model(username: str | None = None) -> Optional[str]:
     """Get the stored model name, if any."""
-    return get_config("model")
+    return get_config("model", {}).get(username)
 
 
-def set_model(model: str | None) -> None:
+def set_model(username: str | None, model: str | None) -> None:
     """Store the model name."""
-    if model is not None:
-        set_config("model", model)
+    if model is not None and username is not None:
+        model_config = get_config("model") or {}
+        model_config.update({username: model})
+        set_config("model", model_config)
 
 
 def get_username() -> Optional[str]:

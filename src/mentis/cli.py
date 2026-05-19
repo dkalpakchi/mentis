@@ -136,6 +136,11 @@ def main():
         action="store_true",
         help="Use RDF/Turtle format for knowledge graph storage",
     )
+    parser.add_argument(
+        "--sparql",
+        action="store_true",
+        help="Use SPARQL queries (only for RDF/Turtle graph storage)",
+    )
     args = parser.parse_args()
 
     # Get username from CLI arg or prompt (always prompt if not via CLI)
@@ -146,19 +151,23 @@ def main():
         add_known_username(username)
 
     # Get KG implementation
-    kg = get_kg(kg_type="rdf" if args.rdf else "graphml", username=username)
+    kg = get_kg(
+        kg_type="rdf" if args.rdf else "graphml",
+        username=username,
+        use_sparql=args.sparql,
+    )
 
     kg_type_name = "RDF" if args.rdf else "GraphML"
     print_internal(f"Using {kg_type_name} knowledge graph for: {username}")
 
     # List and select model
-    stored_model = get_model()
+    stored_model = get_model(username)
     if stored_model:
         model_name = stored_model
         print_internal(f"Using stored model: {model_name}")
     else:
         model_name = prompt_model_choice()
-        set_model(model_name)
+        set_model(username, model_name)
         print_internal(f"Using model: {model_name}")
 
     chatbot = TomChatbot(kg, model=model_name, debug=args.debug)
