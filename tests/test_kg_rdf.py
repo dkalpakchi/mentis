@@ -6,15 +6,15 @@ from pathlib import Path
 
 import pytest
 
-from mentis.kg.rdf import TomGraphRDF
+from mentis.kg.rdf import TomGraphRDF, SCHEMA, TOM_NS
 
 
 # Test data for parametrized tests
 TOM_ATTRIBUTES = ["beliefs", "desires", "intentions", "emotions", "plans"]
 ENTITY_TYPES = [
-    ("person", "Person"),
-    ("organization", "Organization"),
-    ("location", "Place"),
+    ("person", f"{SCHEMA}Person"),
+    ("organization", f"{SCHEMA}Organization"),
+    ("location", f"{SCHEMA}Place"),
 ]
 
 
@@ -74,7 +74,9 @@ class TestRDFBasics:
 
         # Entity should be in the graph
         info = kg.get_entity_info("Alice")
-        assert info["type"] == "Person"  # RDF uses schema.org which capitalizes
+        assert (
+            info["type"] == f"{SCHEMA}Person"
+        )  # RDF uses schema.org which capitalizes
 
         if Path(temp_path).exists():
             os.unlink(temp_path)
@@ -123,7 +125,7 @@ class TestRDFBasics:
         relationships = kg.query_relationships("Alice")
         assert len(relationships) == 1
         assert relationships[0]["target"] == "Bob"
-        assert relationships[0]["type"] == rel_type
+        assert relationships[0]["type"] == f"{TOM_NS}{rel_type}"
 
         if Path(temp_path).exists():
             os.unlink(temp_path)

@@ -19,8 +19,8 @@ from mentis.colors import (
 )
 
 # Define namespaces
-TOM_NS = Namespace("http://example.org/tom#")
-SCHEMA = Namespace("http://schema.org/")
+TOM_NS = Namespace("urn:tom:")
+SCHEMA = Namespace("urn:schema:")
 
 
 class TomGraphRDF(TomGraph):

@@ -45,6 +45,7 @@ RELATIONSHIP_EXTRACTOR_PROMPT = """You are an expert relationship extraction sys
 Identify all explicit and implicit relationships between entities in this text.
 Return ONLY a JSON list of relationship objects.
 Each object must have: source (string), target (string), type (string), context (optional string).
+Make type `snake_case`.
 If no relationships found, return an empty list.
 
 Speaker: {speaker}

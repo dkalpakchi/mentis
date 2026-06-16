@@ -1,6 +1,5 @@
 """Tests for CLI module."""
 
-import pytest
 from unittest.mock import patch, MagicMock
 
 from mentis.cli import main, prompt_model_choice, prompt_username
@@ -111,12 +110,12 @@ class TestMain:
     @patch("builtins.input", side_effect=["quit"])
     def test_main_basic_flow(
         self,
+        mock_input,
         mock_chatbot,
         mock_prompt_username,
         mock_add_known,
         mock_get_kg,
         mock_model_choice,
-        mock_input,
     ):
         """Test basic CLI flow."""
         mock_model_choice.return_value = "llama3.2"
@@ -127,11 +126,12 @@ class TestMain:
         mock_chatbot.return_value = mock_chatbot_instance
         mock_chatbot_instance.process_message.return_value = "Hello!"
 
-        # Run main - it should exit on quit
-        with pytest.raises(SystemExit) as exc_info:
-            main()
-        # Actually main doesn't raise SystemExit, it just returns
-        # Let's just verify it runs without error
+        # NOTE: simulating no arguments behavior to not have pytest -v affect this test
+        # NOTE: any filename could really be passed here, not necessarily "mentis", since we don't check that
+        with patch("sys.argv", ["mentis"]):
+            # Run main - it should exit on quit
+            exit_code = main()
+            assert exit_code is None
 
     @patch("argparse.ArgumentParser.parse_args")
     @patch("mentis.cli.prompt_model_choice")
@@ -142,7 +142,9 @@ class TestMain:
     ):
         """Test main with command-line arguments."""
         mock_parse_args.return_value = type(
-            "Args", (), {"debug": True, "name": "TestUser", "rdf": False}
+            "Args",
+            (),
+            {"debug": True, "name": "TestUser", "rdf": False, "sparql": False},
         )()
         mock_model_choice.return_value = "llama3.2"
         mock_kg = MagicMock()
@@ -153,7 +155,4 @@ class TestMain:
 
         with patch("builtins.input", side_effect=["quit"]):
             # Should not raise
-            try:
-                main()
-            except SystemExit:
-                pass  # May exit with quit
+            main()

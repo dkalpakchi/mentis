@@ -353,9 +353,11 @@ def test_process_message_with_existing_tom_string_values(temp_kg):
         ]
         mock_chat.return_value = {"message": {"content": "ok"}}
 
-        response = chatbot.process_message("Gonna meet with my mate Bob", "user", verbose=False)
+        response = chatbot.process_message(
+            "Gonna meet with my mate Bob", "user", verbose=False
+        )
         assert response == "ok"
-        
+
         # Verify ToM was updated with both values
         updated_tom = temp_kg.get_entity_info("user")
         assert "initial plan" in updated_tom["plans"]

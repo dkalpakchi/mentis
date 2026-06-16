@@ -80,16 +80,14 @@ class TomGraph(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def remove_relationship(
-        self, source: str, target: str, rel_type: str
-    ) -> bool:
+    def remove_relationship(self, source: str, target: str, rel_type: str) -> bool:
         """Remove a specific relationship.
-        
+
         Args:
             source: Source entity name
-            target: Target entity name  
+            target: Target entity name
             rel_type: Relationship type to remove
-            
+
         Returns:
             True if relationship was removed, False if not found
         """
@@ -124,7 +122,9 @@ class TomGraph(ABC):
         Returns:
             List of relationship dicts with source, target, type, context
         """
-        raise NotImplementedError("query_relationships must be implemented by the subclass")
+        raise NotImplementedError(
+            "query_relationships must be implemented by the subclass"
+        )
 
     def query_by_attribute(self, attribute: str, value: str) -> List[str]:
         """Find all entities with a specific ToM attribute value.
@@ -136,4 +136,6 @@ class TomGraph(ABC):
         Returns:
             List of entity names matching the query
         """
-        raise NotImplementedError("query_by_attribute must be implemented by the subclass")
+        raise NotImplementedError(
+            "query_by_attribute must be implemented by the subclass"
+        )

@@ -1,6 +1,5 @@
 """Tests for Theory of Mind state classes."""
 
-
 from mentis.states import (
     TomState,
     TomStateAction,
@@ -42,9 +41,7 @@ class TestTomStateAction:
     def test_create_add_action(self):
         """Test creating an add action."""
         action = TomStateAction(
-            tom_key="beliefs",
-            action=TomStateActionType.ADD,
-            value="the sky is blue"
+            tom_key="beliefs", action=TomStateActionType.ADD, value="the sky is blue"
         )
         assert action.tom_key == "beliefs"
         assert action.action == TomStateActionType.ADD
@@ -53,9 +50,7 @@ class TestTomStateAction:
     def test_create_remove_action(self):
         """Test creating a remove action."""
         action = TomStateAction(
-            tom_key="emotions",
-            action=TomStateActionType.REMOVE,
-            value="angry"
+            tom_key="emotions", action=TomStateActionType.REMOVE, value="angry"
         )
         assert action.tom_key == "emotions"
         assert action.action == TomStateActionType.REMOVE
@@ -66,17 +61,13 @@ class TestTomStateAction:
         # When parsing from JSON, strings need to be converted to enum
         action_str = "add"
         assert action_str in TomStateActionType  # StrEnum supports 'in' with string
-        
+
         # Convert string to enum
         action_enum = TomStateActionType(action_str)
         assert action_enum == TomStateActionType.ADD
-        
+
         # Create action with enum
-        action = TomStateAction(
-            tom_key="desires",
-            action=action_enum,
-            value="to learn"
-        )
+        action = TomStateAction(tom_key="desires", action=action_enum, value="to learn")
         assert action.action == TomStateActionType.ADD
         assert isinstance(action.action, TomStateActionType)
 
@@ -95,10 +86,7 @@ class TestTomState:
 
     def test_create_with_values(self):
         """Test creating TomState with initial values."""
-        state = TomState(
-            beliefs=["the sky is blue"],
-            emotions=["happy"]
-        )
+        state = TomState(beliefs=["the sky is blue"], emotions=["happy"])
         assert state.beliefs == ["the sky is blue"]
         assert state.emotions == ["happy"]
         assert state.desires == []
@@ -107,9 +95,7 @@ class TestTomState:
         """Test applying an add action."""
         state = TomState()
         action = TomStateAction(
-            tom_key="beliefs",
-            action=TomStateActionType.ADD,
-            value="new belief"
+            tom_key="beliefs", action=TomStateActionType.ADD, value="new belief"
         )
         result = state.apply_action(action)
         assert result is True
@@ -119,9 +105,7 @@ class TestTomState:
         """Test adding a duplicate value does nothing."""
         state = TomState(beliefs=["existing"])
         action = TomStateAction(
-            tom_key="beliefs",
-            action=TomStateActionType.ADD,
-            value="existing"
+            tom_key="beliefs", action=TomStateActionType.ADD, value="existing"
         )
         state.apply_action(action)
         assert state.beliefs == ["existing"]  # No duplicate
@@ -130,9 +114,7 @@ class TestTomState:
         """Test applying a remove action."""
         state = TomState(beliefs=["old belief", "new belief"])
         action = TomStateAction(
-            tom_key="beliefs",
-            action=TomStateActionType.REMOVE,
-            value="old belief"
+            tom_key="beliefs", action=TomStateActionType.REMOVE, value="old belief"
         )
         result = state.apply_action(action)
         assert result is True
@@ -143,9 +125,7 @@ class TestTomState:
         """Test removing a non-existent value does nothing."""
         state = TomState(beliefs=["existing"])
         action = TomStateAction(
-            tom_key="beliefs",
-            action=TomStateActionType.REMOVE,
-            value="not there"
+            tom_key="beliefs", action=TomStateActionType.REMOVE, value="not there"
         )
         result = state.apply_action(action)
         assert result is False
@@ -155,9 +135,7 @@ class TestTomState:
         """Test applying action with invalid tom_key fails gracefully."""
         state = TomState()
         action = TomStateAction(
-            tom_key="invalid_key",
-            action=TomStateActionType.ADD,
-            value="value"
+            tom_key="invalid_key", action=TomStateActionType.ADD, value="value"
         )
         result = state.apply_action(action)
         assert result is False
@@ -190,7 +168,9 @@ class TestTomState:
         """Test applying action with invalid action type string."""
         state = TomState(beliefs=["existing"])
         # Manually create an action with invalid action (bypassing type hints)
-        action = TomStateAction(tom_key="beliefs", action="invalid_action", value="test")
+        action = TomStateAction(
+            tom_key="beliefs", action="invalid_action", value="test"
+        )
         result = state.apply_action(action)
         assert result is False
         # State should be unchanged
@@ -199,11 +179,8 @@ class TestTomState:
     def test_asdict(self):
         """Test converting TomState to dict using dataclasses.asdict."""
         from dataclasses import asdict
-        
-        state = TomState(
-            beliefs=["a", "b"],
-            desires=["c"]
-        )
+
+        state = TomState(beliefs=["a", "b"], desires=["c"])
         d = asdict(state)
         assert d == {
             "beliefs": ["a", "b"],

@@ -27,8 +27,9 @@ class TestConfig:
         # Need to reload the module to pick up new directory
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
+
         result = mentis.config.load_config()
         assert result == {}
 
@@ -36,11 +37,12 @@ class TestConfig:
         """Test saving and loading config."""
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
+
         config = {"model": "llama3.2", "username": "Alice"}
         mentis.config.save_config(config)
-        
+
         result = mentis.config.load_config()
         assert result == config
 
@@ -48,18 +50,22 @@ class TestConfig:
         """Test getting and setting model."""
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
-        mentis.config.set_model("mistral")
-        result = mentis.config.get_model()
+
+        user = "bob"
+
+        mentis.config.set_model(user, "mistral")
+        result = mentis.config.get_model(user)
         assert result == "mistral"
 
     def test_get_set_username(self, temp_config_dir):
         """Test getting and setting username."""
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
+
         mentis.config.set_username("Bob")
         result = mentis.config.get_username()
         assert result == "Bob"
@@ -68,8 +74,9 @@ class TestConfig:
         """Test get_config with default value."""
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
+
         result = mentis.config.get_config("nonexistent", "default_value")
         assert result == "default_value"
 
@@ -77,15 +84,16 @@ class TestConfig:
         """Test finding usernames from KG files."""
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
+
         # Create mock KG files
         Path("kg_Alice.graphml").write_text("")
         Path("kg_Bob.ttl").write_text("")
         Path("kg_Charlie.graphml").write_text("")
         # Also create a non-KG file that shouldn't be matched
         Path("kg_backup.graphml.bak").write_text("")
-        
+
         result = mentis.config.find_existing_usernames()
         assert "Alice" in result
         assert "Bob" in result
@@ -97,12 +105,13 @@ class TestConfig:
         """Test adding a known username."""
         import importlib
         import mentis.config
+
         importlib.reload(mentis.config)
-        
+
         mentis.config.add_known_username("Alice")
         mentis.config.add_known_username("Bob")
         mentis.config.add_known_username("Alice")  # Duplicate
-        
+
         config = mentis.config.load_config()
         assert "usernames" in config
         assert "Alice" in config["usernames"]
